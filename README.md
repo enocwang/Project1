@@ -24,6 +24,8 @@ Here's a walkthrough of implemented user stories:
 
 <img src='walkthrough.gif' title='Video Walkthrough' width='50%' alt='Video Walkthrough' />
 
+![](https://github.com/enocwang/Project1/blob/master/Project2.gif)
+
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
