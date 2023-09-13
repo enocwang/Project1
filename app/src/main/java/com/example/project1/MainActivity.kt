@@ -94,7 +94,6 @@ class MainActivity : AppCompatActivity() {
             btn.setOnClickListener {
                 inputText.text = inputText.text.toString() + btn.text
                 currentInput = inputText.text.toString()
-
             }
         }
         btnOperators.forEach { btn ->
