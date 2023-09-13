@@ -14,12 +14,6 @@
         android:layout_weight="2"
         android:padding="20dp">
         <TextView
-            android:id="@+id/tvWork"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            tools:ignore="MissingConstraints" />
-        <TextView
             android:id="@+id/tvResults"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,6 +46,10 @@
             android:id="@+id/bDivide"
             style="@style/buttonOperator"
             android:text="/"></Button>
+        <Button
+            android:id="@+id/bSin"
+            style="@style/buttonOperator"
+            android:text="sin"></Button>
     </LinearLayout>
     <LinearLayout
         style="@style/buttonRow">
@@ -71,6 +69,10 @@
             android:id="@+id/bMultiply"
             style="@style/buttonOperator"
             android:text="×"></Button>
+        <Button
+            android:id="@+id/bCos"
+            style="@style/buttonOperator"
+            android:text="cos"></Button>
     </LinearLayout>
 
     <LinearLayout
@@ -91,6 +93,10 @@
             android:id="@+id/bSubtract"
             style="@style/buttonOperator"
             android:text="-"></Button>
+        <Button
+            android:id="@+id/bTan"
+            style="@style/buttonOperator"
+            android:text="tan"></Button>
     </LinearLayout>
     <LinearLayout
         style="@style/buttonRow">
@@ -110,6 +116,11 @@
             android:id="@+id/bPlus"
             style="@style/buttonOperator"
             android:text="+"></Button>
+        <Button
+            android:id="@+id/bLog10"
+            style="@style/buttonOperator"
+            android:text="Log 10"></Button>
+
     </LinearLayout>
     <LinearLayout
         style="@style/buttonRow">
@@ -127,13 +138,12 @@
             style="@style/buttonOperator"
             android:onClick="equalsAction"
             android:text="="/>
+        <Button
+            android:id="@+id/bLn"
+            style="@style/buttonOperator"
+            android:text="ln"></Button>
     </LinearLayout>
 
 
 
 </LinearLayout>
-
-
-
-
-
