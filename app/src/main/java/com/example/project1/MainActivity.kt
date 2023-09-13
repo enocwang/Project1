@@ -1,43 +1,16 @@
 package com.example.project1
-
-import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Stack
+
+
+
 class MainActivity : AppCompatActivity() {
-    private val currentOrientation = resources.configuration.orientation
-    private lateinit var b0: Button
-    private lateinit var b1: Button
-    private lateinit var b2: Button
-    private lateinit var b3: Button
-    private lateinit var b4: Button
-    private lateinit var b5: Button
-    private lateinit var b6: Button
-    private lateinit var b7: Button
-    private lateinit var b8: Button
-    private lateinit var b9: Button
-    private lateinit var decimal: Button
-    private lateinit var clear: Button
-    private lateinit var plusMinus: Button
-    private lateinit var percent: Button
-    private lateinit var divide: Button
-    private lateinit var multiply: Button
-    private lateinit var minus: Button
-    private lateinit var add: Button
-    private lateinit var equals: Button
-    private lateinit var sin: Button
-    private lateinit var cos: Button
-    private lateinit var tan: Button
-    private lateinit var log10: Button
-    private lateinit var ln: Button
     private var operandStack = Stack<String>()
     private var operatorStack = Stack<String>()
     private lateinit var btnNumbers: List<Button>
@@ -47,114 +20,137 @@ class MainActivity : AppCompatActivity() {
     private var currentOp = ""
 
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable("OPERAND_STACK", operandStack)
-        outState.putSerializable("OPERATOR_STACK", operatorStack)
-        outState.putString("CURRENT_INPUT", currentInput)
-        outState.putString("PENDING_OP", currentOp)
-    }
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
+        Log.d("MainActivity", "onCreate() started")
         if (savedInstanceState != null) {
-
             // Extract bundle
-            val outState = savedInstanceState
-
             // Restore state
-            /*operandStack = outState.getSerializable("OPERAND_STACK") as? Stack<String> ?: Stack()
-            operatorStack = outState.getSerializable("OPERATOR_STACK") as? Stack<String> ?: Stack()
-            currentInput = outState.getString("CURRENT_INPUT", "")
-            currentOp = outState.getString("PENDING_OP", "")*/
-
-            operandStack = outState.getSerializable("OPERAND_STACK") as? Stack<String> ?: Stack()
-            operatorStack = outState.getSerializable("OPERATOR_STACK") as? Stack<String> ?: Stack()
-            currentInput = outState.getString("CURRENT_INPUT", "") ?: ""
-            currentOp = outState.getString("PENDING_OP", "") ?: ""
-
-
-
-
-
+            operandStack = savedInstanceState.getSerializable("OPERAND_STACK") as Stack<String>
+            operatorStack = savedInstanceState.getSerializable("OPERATOR_STACK") as Stack<String>
+            currentInput = savedInstanceState.getSerializable("CURRENT_INPUT").toString()
+            currentOp = savedInstanceState.getSerializable("PENDING_OP").toString()
         }
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
 
-        btnNumbers = listOf(b0, b1, b2, b3, b4, b5, b6, b7, b8, b9)
-        btnOperators = listOf(percent, divide, multiply, minus, add, sin, cos, tan, log10, ln, plusMinus, percent)
-        inputText = findViewById(R.id.tvResults)
-
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // Load landscape layout
             setContentView(R.layout.activity_main)
+            btnOperators = listOf(findViewById<Button>(R.id.bPlusMinus), findViewById<Button>(R.id.bPercent), findViewById<Button>(R.id.bDivide), findViewById<Button>(R.id.bMultiply), findViewById<Button>(R.id.bSubtract), findViewById<Button>(R.id.bPlus), findViewById<Button>(R.id.bSin), findViewById<Button>(R.id.bCos), findViewById<Button>(R.id.bTan), findViewById<Button>(R.id.bLog10), findViewById<Button>(R.id.bLn))
+            Log.d("ButtonOperatorIDs", btnOperators.toString())
+            btnOperators.forEach { id ->
+                Log.d("ButtonNumberIDs", id.toString())
+            }
         } else {
+
+            // Load portrait layout
             setContentView(R.layout.activity_main)
-        }
-        btnNumbers.forEach { btn ->
-            btn.setOnClickListener {
-                inputText.text = inputText.text.toString() + btn.text
-                currentInput = inputText.text.toString()
+            btnOperators = listOf(findViewById<Button>(R.id.bPlusMinus), findViewById<Button>(R.id.bPercent), findViewById<Button>(R.id.bDivide), findViewById<Button>(R.id.bMultiply), findViewById<Button>(R.id.bSubtract), findViewById<Button>(R.id.bPlus))
+            Log.d("ButtonOperatorIDs", btnOperators.toString())
+            btnOperators.forEach { id ->
+                Log.d("ButtonNumberIDs", id.toString())
             }
         }
-        btnOperators.forEach { btn ->
-            btn.setOnClickListener {
-                if(inputText.text.isNotEmpty()){
+        val decimal = findViewById<Button>(R.id.bDecimal)
+        val clear = findViewById<Button>(R.id.bClear)
+        val equals = findViewById<Button>(R.id.bEquals)
+        btnNumbers = listOf(findViewById<Button>(R.id.b0), findViewById<Button>(R.id.b1),findViewById<Button>(R.id.b2),findViewById<Button>(R.id.b3),findViewById<Button>(R.id.b4),findViewById<Button>(R.id.b5),findViewById<Button>(R.id.b6),findViewById<Button>(R.id.b7),findViewById<Button>(R.id.b8),findViewById<Button>(R.id.b9))
+        Log.d("ButtonNumberIDs", btnNumbers.toString())
+        btnNumbers.forEach { id ->
+            Log.d("ButtonNumberIDs", id.toString())
+        }
+
+        inputText = findViewById(R.id.tvResults)
+
+        if(btnNumbers != null) {
+            btnNumbers.forEach { btn ->
+                btn.setOnClickListener {
+                    inputText.text = inputText.text.toString() + btn.text
+                    currentInput = inputText.text.toString()
+
+                }
+            }
+        }
+
+        if(btnOperators != null) {
+            btnOperators.forEach { btn ->
+                btn.setOnClickListener {
+                    Log.d("OperandStack", "${operandStack.size}")
+                    Log.d("OperatorStack", "${operatorStack.size}")
                     currentOp = btn.text.toString()
                     operatorStack.push(btn.text.toString())
                     operandStack.push(currentInput)
                     currentInput = ""
+                    inputText.text = ""
+                    Log.d("OperandStack", "${operandStack.size}")
+                    Log.d("OperatorStack", "${operatorStack.size}")
                 }
             }
         }
 
-        decimal.setOnClickListener {
-            if(currentInput.isNotEmpty()){
-                currentInput += decimal.text
+        decimal?.setOnClickListener {
+            if (currentInput.isNotEmpty()) {
+                currentInput += "."
+                inputText.text = inputText.text.toString() + "."
             }
         }
 
-        equals.setOnClickListener {
-            val result = 0.0
-            val op = operatorStack.pop()
-            while(!operatorStack.isEmpty()) {
+
+        equals?.setOnClickListener {
+            operandStack.push(currentInput)
+            var result = 0.0
+            Log.d("OperandStack", "${operandStack.size}")
+            Log.d("OperatorStack", "${operatorStack.size}")
+            while(operatorStack.isNotEmpty()) {
+                val op = operatorStack.pop()
                 if (isBinaryOperation(op)) {
                     val operand1 = operandStack.pop()
                     val operand2 = operandStack.pop()
-                    val result = operate(op, operand1.toBigDecimal(), operand2.toBigDecimal())
+                    result = operate(op, operand1.toDouble(), operand2.toDouble())
+                    Log.d("OperandStack", "${operandStack.size}")
+                    Log.d("OperatorStack", "${operatorStack.size}")
                 } else {
                     val operand = operandStack.pop()
-                    val result = operate(op, operand.toBigDecimal())
+                    result = operate(op, operand.toDouble())
+                    Log.d("OperandStack", "${operandStack.size}")
+                    Log.d("OperatorStack", "${operatorStack.size}")
                 }
             }
+            Log.d("OperandStack", "${operandStack.size}")
+            Log.d("OperatorStack", "${operatorStack.size}")
             val scale = 2
             val roundingMode = RoundingMode.HALF_UP
-            val resultString = result.toBigDecimal().setScale(scale, roundingMode).toString()
+            val resultString = result.toString()
             inputText.text = resultString
+            currentOp = ""
+            currentInput = ""
+
         }
         clear.setOnClickListener {
             inputText.text = ""
             currentOp = ""
             currentInput = ""
-            operandStack.removeAllElements()
             operatorStack.removeAllElements()
         }
     }
 
-    private fun operate(op: String, vararg operands: BigDecimal): Double {
+
+
+    private fun operate(op: String, vararg operands: Double): Double {
         return when(op) {
             "+" -> {
                 (operands[0] + operands[1]).toDouble()
             }
 
             "-" -> {
-                (operands[0] - operands[1]).toDouble()
+                (operands[1] - operands[0]).toDouble()
             }
 
             "×" -> {
                 (operands[0] * operands[1]).toDouble()
             }
             "/" -> {
-                (operands[0] / operands[1]).toDouble()
+                (operands[1] / operands[0]).toDouble()
             }
             "sin" -> {
                 kotlin.math.sin(operands[0].toDouble())
@@ -182,10 +178,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable("OPERAND_STACK", operandStack)
+        outState.putSerializable("OPERATOR_STACK", operatorStack)
+        outState.putString("CURRENT_INPUT", currentInput)
+        outState.putString("PENDING_OP", currentOp)
+    }
     private fun isBinaryOperation(op: String): Boolean{
         return when(op){
             "+","-","×","/" -> true
             else -> false
         }
     }
+
+
 }
+
+
+
+

@@ -21,6 +21,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBaseline_toTopOf="parent"
+            android:text=""
             android:textSize="80sp"
             android:textStyle="bold"/>
 
@@ -120,7 +121,6 @@
             android:id="@+id/bLog10"
             style="@style/buttonOperator"
             android:text="Log 10"></Button>
-
     </LinearLayout>
     <LinearLayout
         style="@style/buttonRow">
@@ -143,7 +143,5 @@
             style="@style/buttonOperator"
             android:text="ln"></Button>
     </LinearLayout>
-
-
 
 </LinearLayout>
